@@ -1,10 +1,6 @@
 package com.co.pragma.serviceclient.application.request;
 
 
-
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,8 +17,10 @@ public class ClientRequest {
 	
 	private String lastname;
 	
+	@NonNull
 	private String typeDocument;
 	
+	@NonNull
 	private String numberDocument;
 	
 	private Integer age;

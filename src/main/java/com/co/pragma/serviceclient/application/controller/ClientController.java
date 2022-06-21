@@ -2,11 +2,10 @@ package com.co.pragma.serviceclient.application.controller;
 
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
 
 import com.co.pragma.serviceclient.domain.client.Client;
-import com.co.pragma.serviceclient.domain.exception.ClienteCreateException;
-import com.co.pragma.serviceclient.domain.exception.ClienteNotFoundException;
+import com.co.pragma.serviceclient.domain.exception.ClientCreateException;
+import com.co.pragma.serviceclient.domain.exception.ClientNotFoundDocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -60,7 +59,7 @@ public class ClientController {
 		        @ApiResponse(code = 404, message = "Not Found"),
 		        @ApiResponse(code = 500, message = "Failure")
 		      })
-	public ResponseEntity<?> getClientDocument(@RequestParam String typeDocument,@RequestParam String numberDocument) throws ClienteNotFoundException {
+	public ResponseEntity<Client> getClientDocument(@RequestParam String typeDocument,@RequestParam String numberDocument) throws ClientNotFoundDocumentException {
 		return new ResponseEntity<>(clientService.getByTypeAndNumer(typeDocument, numberDocument),HttpStatus.OK);
 	}
 	
@@ -80,7 +79,7 @@ public class ClientController {
 		        @ApiResponse(code = 404, message = "Not Found"),
 		        @ApiResponse(code = 500, message = "Failure")
 		      })
-	public ResponseEntity<?> updateClient(@Validated @RequestBody ClientRequest clientRequest) throws ClienteCreateException {
+	public ResponseEntity<Client> updateClient(@Validated @RequestBody ClientRequest clientRequest) throws ClientCreateException {
 		Client clientDomain = clientApplicationMapper.clientRequesttoClientDomain(clientRequest);
 		return new ResponseEntity<>(clientService.createClient(clientDomain),HttpStatus.OK);
 	}
@@ -100,7 +99,7 @@ public class ClientController {
 		        @ApiResponse(code = 404, message = "Not Found"),
 		        @ApiResponse(code = 500, message = "Failure")
 		      })
-	public ResponseEntity<?> updateClient(@Validated @RequestBody ClientRequest clientRequest, @PathVariable("id") Long id) throws ClienteCreateException {
+	public ResponseEntity<Client> updateClient(@Validated @RequestBody ClientRequest clientRequest, @PathVariable("id") Long id) throws ClientCreateException {
 		Client clientDomain = clientApplicationMapper.clientRequesttoClientDomain(clientRequest);
 		return new ResponseEntity<>(clientService.updateClient(clientDomain,id),HttpStatus.OK);
 	}
@@ -118,7 +117,7 @@ public class ClientController {
 		        @ApiResponse(code = 404, message = "Not Found"),
 		        @ApiResponse(code = 500, message = "Failure")
 		      })
-	public ResponseEntity<?> disableClient( @PathVariable("id") Long id) throws ClienteCreateException {
+	public ResponseEntity<String> disableClient( @PathVariable("id") Long id) throws ClientCreateException {
 		 clientService.disableClient(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

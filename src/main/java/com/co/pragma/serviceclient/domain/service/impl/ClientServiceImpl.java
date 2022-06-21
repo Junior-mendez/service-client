@@ -3,11 +3,14 @@ package com.co.pragma.serviceclient.domain.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
 
 import com.co.pragma.serviceclient.domain.client.Client;
-import com.co.pragma.serviceclient.domain.exception.ClienteCreateException;
-import com.co.pragma.serviceclient.domain.exception.ClienteNotFoundException;
+import com.co.pragma.serviceclient.domain.exception.ClientCreateException;
+import com.co.pragma.serviceclient.domain.exception.ClientDisableException;
+import com.co.pragma.serviceclient.domain.exception.ClientNotFoundDocumentException;
+import com.co.pragma.serviceclient.domain.exception.ClientNotFoundIdException;
+import com.co.pragma.serviceclient.domain.exception.ClientUpdateException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,45 +34,46 @@ public class ClientServiceImpl implements ClientService{
 	}
 
 	@Override
-	public Client createClient(Client client) throws ClienteCreateException{
+	public Client createClient(Client client) throws ClientCreateException{
 		
 		ClientEntity clientEntity = clientDomainMapper.clientDomainToClientEntity(client);
 		
 		if(Optional.ofNullable(clientRepository.getByTypeAndNumber(client.getTypeDocument(), client.getNumberDocument()))
 				.isPresent()){
-			throw new ClienteCreateException(client);
+			throw new ClientCreateException(client);
 		}
 		
 		return Optional.ofNullable(clientRepository.createClient(clientEntity))
 				.map(clientDomainMapper::clientEntityToClientDomain)
-				.orElseThrow(()->new ClienteCreateException(client));
+				.orElseThrow(()->new ClientCreateException(client));
 	}
 
 	@Override
-	public Client getByTypeAndNumer(String typeDocument, String numberDocument) throws ClienteNotFoundException {
+	public Client getByTypeAndNumer(String typeDocument, String numberDocument) throws ClientNotFoundDocumentException {
 		
 		 return Optional.ofNullable(clientRepository.getByTypeAndNumber(typeDocument, numberDocument))
 					.map(clientDomainMapper::clientEntityToClientDomain)
-					.orElseThrow(() ->  new ClienteNotFoundException(typeDocument,numberDocument));
+					.orElseThrow(() ->  new ClientNotFoundDocumentException(typeDocument,numberDocument));
 	}
 	
 	@Override
-	public Client updateClient(Client client, Long id) throws ClienteCreateException{
+	public Client updateClient(Client client, Long id) throws ClientCreateException{
 		
-		clientRepository.findById(id).orElseThrow(()->new ClienteCreateException(client));
+		clientRepository.findById(id);
 		client.setId(id);
 		ClientEntity clientEntity = clientDomainMapper.clientDomainToClientEntity(client);
 		return Optional.ofNullable(clientRepository.updateClient(clientEntity))
 				.map(clientDomainMapper::clientEntityToClientDomain)
-				.orElseThrow(()->new ClienteCreateException(client));
+				.orElseThrow(()->new ClientUpdateException(client));
 	}
 
 	@Override
-	public void disableClient(Long id) throws ClienteCreateException {
+	public void disableClient(Long id) throws ClientCreateException {
 		
-		Client client =clientRepository.findById(id).map(clientDomainMapper::clientEntityToClientDomain).orElseThrow(()->new ClienteCreateException(new Client()));
+		Client client =clientRepository.findById(id).map(clientDomainMapper::clientEntityToClientDomain).orElseThrow(()->new ClientNotFoundIdException(id));
 		client.setState(false);
-		clientRepository.disableClient(clientDomainMapper.clientDomainToClientEntity(client));
+		Optional.ofNullable(clientRepository.disableClient(clientDomainMapper.clientDomainToClientEntity(client)))
+		.orElseThrow(()->new ClientDisableException(id)) ;
 
 	}
 

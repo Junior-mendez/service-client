@@ -1,7 +1,5 @@
 package com.co.pragma.serviceclient.application.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -9,11 +7,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -22,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,14 +25,12 @@ import com.co.pragma.helpers.ClientHelper;
 import com.co.pragma.serviceclient.application.mapper.ClientApplicationMapper;
 import com.co.pragma.serviceclient.application.request.ClientRequest;
 import com.co.pragma.serviceclient.domain.client.Client;
-import com.co.pragma.serviceclient.domain.mapper.ClientDomainMapper;
 import com.co.pragma.serviceclient.domain.service.ClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(ClientController.class)
-public class ClientControllerTest {
+class ClientControllerTest {
 	
 	@Autowired 
 	private MockMvc mockMvc;
@@ -48,7 +41,7 @@ public class ClientControllerTest {
 	@MockBean
 	private ClientApplicationMapper clientApplicationMapper;
     static ObjectMapper om = new ObjectMapper();
-	@Before
+	@BeforeEach
 	  public void setUp() throws Exception {
 	    om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 	    JacksonTester.initFields(this, om);
