@@ -13,13 +13,15 @@ public interface ClientRepository{
 	
 	List<ClientEntity> getAllClients();
 	
-	ClientEntity createClient(ClientEntity client) throws ClientCreateException;
+	ClientEntity createClient(ClientEntity client) ;
 	
 	ClientEntity getByTypeAndNumber(String typeDocument, String numberDocument);
 	
+	List<ClientEntity> getByAgeGreater (Integer age);
+	
 	Optional<ClientEntity>  findById(Long id);
 	
-	ClientEntity updateClient(ClientEntity client) throws ClientCreateException;
+	ClientEntity updateClient(ClientEntity client) ;
 	
 	ClientEntity disableClient(ClientEntity client);
 

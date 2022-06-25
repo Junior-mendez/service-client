@@ -1,5 +1,6 @@
 package com.co.pragma.serviceclient.domain.exception;
 
+import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -58,6 +59,14 @@ public class ErrorHandler {
     @ExceptionHandler(ClientDisableException.class)
     public ResponseEntity<ErrorResponse> notDisableException(ClientDisableException ex) {
     	 return new ResponseEntity<>(ErrorResponse.builder().error("Cliente no deshabilitado")
+                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                 .message(ex.getMessage())
+                 .timestamp(new Date().toString()).build(),HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    @ExceptionHandler(JDBCConnectionException.class)
+    public ResponseEntity<ErrorResponse> jdbcExcetion(JDBCConnectionException ex) {
+    	 return new ResponseEntity<>(ErrorResponse.builder().error("Problema al conectar con base de datos")
                  .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                  .message(ex.getMessage())
                  .timestamp(new Date().toString()).build(),HttpStatus.INTERNAL_SERVER_ERROR);

@@ -68,7 +68,39 @@
 			<artifactId>springfox-boot-starter</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+
+
 	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>2021.0.1</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 
 	<build>
 		<plugins>
@@ -105,9 +137,9 @@
 						<!-- Mapper Application -->
 						<exclude>com/co/pragma/**/application/mapper/*</exclude>
 						<!-- Request Application -->
-						<exclude>com/co/pragma/**/application/request/*</exclude>
+						<exclude>com/co/pragma/**/application/models/request/*</exclude>
 						<!-- Response Application -->
-						<exclude>com/co/pragma/**/application/response/*</exclude>
+						<exclude>com/co/pragma/**/application/models/response/*</exclude>
 						<!-- Client Domain -->
 						<exclude>com/co/pragma/**/domain/client/*</exclude>
 						<!-- Mapper Domain -->
@@ -116,6 +148,8 @@
 						<exclude>com/co/pragma/**/domain/repository/*</exclude>
 						<!-- Exception Domain -->
 						<exclude>com/co/pragma/**/domain/exception/*</exclude>
+						<!-- Feign Domain -->
+						<exclude>com/co/pragma/**/domain/feign/dto/*</exclude>
 						<!-- Config Infraestructure -->
 						<exclude>com/co/pragma/**/infraestructure/**/*</exclude>
 					</excludes>

@@ -1,11 +1,10 @@
 package com.co.pragma.serviceclient.domain.service;
 
 import java.util.List;
-
+import java.util.Optional;
 
 import com.co.pragma.serviceclient.domain.client.Client;
 import com.co.pragma.serviceclient.domain.exception.ClientCreateException;
-import com.co.pragma.serviceclient.domain.exception.ClientNotFoundDocumentException;
 
 public interface ClientService {
 	
@@ -15,11 +14,14 @@ public interface ClientService {
 	Client createClient(Client client) throws ClientCreateException;
 	
 	
-	Client getByTypeAndNumer(String typeDocument, String numberDocument) throws ClientNotFoundDocumentException;
+	Client getByTypeAndNumer(String typeDocument, String numberDocument);
+	
+	
+	List<Client> getByAgeGreater(Integer age);
 	
 
-	Client updateClient(Client client, Long id) throws ClientCreateException;
+	Client updateClient(Client client, Long id) ;
 	
-	void disableClient( Long id) throws ClientCreateException;
+	void disableClient( Long id) ;
 	
 }

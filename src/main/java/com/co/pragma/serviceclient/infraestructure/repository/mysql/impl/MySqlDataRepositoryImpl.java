@@ -13,9 +13,9 @@ import com.co.pragma.serviceclient.infraestructure.repository.mysql.MySqlReposit
 import com.co.pragma.serviceclient.infraestructure.repository.mysql.entity.ClientEntity;
 
 @Component
-public class MySqlRepositoryImpl implements ClientRepository {
+public class MySqlDataRepositoryImpl implements ClientRepository {
 	
-	@Lazy
+
 	@Autowired
 	private MySqlRepository mySqlRepository;
 	
@@ -33,7 +33,7 @@ public class MySqlRepositoryImpl implements ClientRepository {
 
 
 	@Override
-	public ClientEntity createClient(ClientEntity client) throws ClientCreateException {
+	public ClientEntity createClient(ClientEntity client)  {
 		return mySqlRepository.save(client);
 	}
 
@@ -45,7 +45,7 @@ public class MySqlRepositoryImpl implements ClientRepository {
 
 
 	@Override
-	public ClientEntity updateClient(ClientEntity client) throws ClientCreateException {
+	public ClientEntity updateClient(ClientEntity client) {
 		return mySqlRepository.save(client);
 	}
 
@@ -55,6 +55,13 @@ public class MySqlRepositoryImpl implements ClientRepository {
 		
 		return mySqlRepository.save(client);
 		
+	}
+
+
+	@Override
+	public List<ClientEntity> getByAgeGreater(Integer age) {
+		
+		return mySqlRepository.findByAgeGreaterThanEqual(age);
 	}
 
 

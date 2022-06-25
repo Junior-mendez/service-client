@@ -2,29 +2,32 @@ package com.co.pragma.serviceclient.application.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
+import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.co.pragma.helpers.ClientHelper;
 import com.co.pragma.serviceclient.application.mapper.ClientApplicationMapper;
-import com.co.pragma.serviceclient.application.request.ClientRequest;
+import com.co.pragma.serviceclient.application.models.request.ClientRequest;
 import com.co.pragma.serviceclient.domain.client.Client;
+import com.co.pragma.serviceclient.domain.feign.ClientImageFeign;
 import com.co.pragma.serviceclient.domain.service.ClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -37,6 +40,9 @@ class ClientControllerTest {
 	
 	@MockBean
 	private ClientService clientService;
+	
+	@MockBean
+	private ClientImageFeign clientImageFeign;
 	
 	@MockBean
 	private ClientApplicationMapper clientApplicationMapper;
@@ -74,16 +80,21 @@ class ClientControllerTest {
 	}
 	@Test
 	void testcreateClient() throws Exception {
-		ClientRequest clientRequest = ClientHelper.creeateClientRequest();
+		byte[] byteContent1 = "text1".getBytes(StandardCharsets.US_ASCII);
+
+		MockMultipartFile filePart1 = new MockMultipartFile("image", "file1.txt", "text/plain", byteContent1);
+		ClientRequest clientRequest = ClientHelper.createClientRequest();
 		Client clientDomain = ClientHelper.createClientDomainOfRequest();
 		when(clientApplicationMapper.clientRequesttoClientDomain(clientRequest)).thenReturn(clientDomain);
 		when(clientService.createClient(clientDomain)).thenReturn(clientDomain);
 		
 		 mockMvc
 	        .perform(
-	            post("/client/create")
-	            .content(om.writeValueAsBytes(clientRequest))
-        		.contentType(MediaType.APPLICATION_JSON_VALUE))
+	        		 multipart("/client/create")
+	  	           .file(filePart1)
+	  	         .param("typeDocument", clientRequest.getTypeDocument())
+		         .param("numberDocument", clientRequest.getNumberDocument())
+	            )
 	        .andDo(print())
 	        .andExpect(status().isOk());
 		
@@ -91,16 +102,20 @@ class ClientControllerTest {
 	
 	@Test
 	void testUpdateClient() throws Exception {
-		ClientRequest clientRequest = ClientHelper.creeateClientRequest();
+		byte[] byteContent1 = "text1".getBytes(StandardCharsets.US_ASCII);
+
+		MockMultipartFile filePart1 = new MockMultipartFile("image", "file1.txt", "text/plain", byteContent1);
+		ClientRequest clientRequest = ClientHelper.createClientRequest();
 		Client clientDomain = ClientHelper.createClientDomainOfRequest();
 		when(clientApplicationMapper.clientRequesttoClientDomain(clientRequest)).thenReturn(clientDomain);
 		when(clientService.updateClient(clientDomain,11L)).thenReturn(clientDomain);
 		
 		 mockMvc
 	        .perform(
-	            put("/client/update/{id}",11L)
-	            .content(om.writeValueAsBytes(clientRequest))
-        		.contentType(MediaType.APPLICATION_JSON_VALUE))
+	           multipart("/client/update/11")
+	           .file(filePart1)
+	           .param("typeDocument", clientRequest.getTypeDocument())
+		         .param("numberDocument", clientRequest.getNumberDocument()))
 	        .andDo(print())
 	        .andExpect(status().isOk());
 		
@@ -112,6 +127,19 @@ class ClientControllerTest {
 		 mockMvc
 	        .perform(
 	            put("/client/disable/{id}",11L))
+	        .andDo(print())
+	        .andExpect(status().isOk());
+		
+	}
+	
+	@Test
+	void testClientByAge() throws Exception {
+		when(clientService.getByAgeGreater(Mockito.any())).thenReturn(ClientHelper.createListClients());
+		
+		 mockMvc
+	        .perform(
+	            get("/client/age")
+	            .param("age","20"))
 	        .andDo(print())
 	        .andExpect(status().isOk());
 		

@@ -1,4 +1,4 @@
-package com.co.pragma.serviceclient.application.response;
+package com.co.pragma.serviceclient.application.models.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +22,7 @@ public class ClientResponse {
 	private Integer age;
 	
 	private String birthCity;
+	
+	private String image;
 
 }

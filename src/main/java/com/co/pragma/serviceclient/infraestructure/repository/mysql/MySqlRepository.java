@@ -17,5 +17,8 @@ public interface MySqlRepository extends JpaRepository<ClientEntity, Long>{
 	@Transactional(readOnly = true)
 	ClientEntity findByTypeDocumentAndNumberDocumentAndStateIsTrue(String typeDocument, String numberDocument);
 	
+	@Transactional(readOnly = true)
+	List<ClientEntity> findByAgeGreaterThanEqual(Integer age);
+	
 	
 }
