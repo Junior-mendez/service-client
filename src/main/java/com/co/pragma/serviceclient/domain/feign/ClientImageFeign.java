@@ -7,12 +7,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.web.bind.annotation.RequestBody;
 import com.co.pragma.serviceclient.domain.feign.dto.ClientImageDTO;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @FeignClient(name = "service-client-image", url = "${url.service-client-image}")
 public interface ClientImageFeign {

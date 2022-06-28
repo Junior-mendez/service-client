@@ -1,11 +1,12 @@
 package com.co.pragma.servicecliente;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.co.pragma.serviceclient.ServiceClienteApplication;
 
-@ContextConfiguration(classes = { ServiceClienteApplication.class })
+@SpringBootConfiguration
 class ServiceClienteApplicationTests {
 	
 	@Test

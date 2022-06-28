@@ -1,7 +1,6 @@
 package com.co.pragma.serviceclient.domain.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.co.pragma.serviceclient.domain.client.Client;
 import com.co.pragma.serviceclient.domain.exception.ClientCreateException;
